@@ -1,0 +1,21 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t mpq1990/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true mpq1990/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t mpq1990/multi-client ./client
+  - docker build -t mpq1990/multi-nginx ./nginx
+  - docker build -t mpq1990/multi-server ./server
+  - docker build -t mpq1990/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push mpq1990/multi-client
+  - docker push mpq1990/multi-nginx
+  - docker push mpq1990/multi-server
+  - docker push mpq1990/multi-worker
