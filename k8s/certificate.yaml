@@ -3,7 +3,7 @@ kind: Certificate
 metadata:
   name: mpq1990-com-tls
 spec:
-  secret: mpq1990-com
+  secretName: mpq1990-com
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
